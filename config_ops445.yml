@@ -1,0 +1,57 @@
+---
+- name: Configure CentOS 7 VM for OPS445 Labs
+  hosts: vmlab
+  become: yes
+  vars:
+    seneca_id: "rohit7"  # Replace with your actual Seneca ID
+
+  tasks:
+    - name: Ensure EPEL repository is installed
+      yum:
+        name: epel-release
+        state: present
+
+    - name: Update Apache (httpd)
+      yum:
+        name: httpd
+        state: latest
+
+    - name: Remove 'tree' package
+      yum:
+        name: tree
+        state: absent
+
+    - name: Set hostname
+      hostname:
+        name: "{{ seneca_id }}"
+
+    - name: Create new user with sudo access
+      user:
+        name: "{{ seneca_id }}"
+        shell: /bin/bash
+        home: "/home/{{ seneca_id }}"
+        create_home: yes
+
+    - name: Add user to sudoers
+      copy:
+        dest: "/etc/sudoers.d/{{ seneca_id }}"
+        content: "{{ seneca_id }} ALL=(ALL) NOPASSWD: ALL"
+        mode: 0440
+
+    - name: Configure SSH key authentication
+      authorized_key:
+        user: "{{ seneca_id }}"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"  # Ensure you have an SSH key available
+
+    - name: Create directory structure for labs
+      file:
+        path: "/home/{{ seneca_id }}/ops445/lab{{ item }}"
+        state: directory
+        owner: "{{ seneca_id }}"
+        group: "{{ seneca_id }}"
+        mode: '0755'
+      loop: "{{ range(1,9) | list }}"
+
+  
+
