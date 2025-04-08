@@ -3,7 +3,7 @@
   hosts: vmlab
   become: yes
   vars:
-    seneca_id: "rohit7"  # Replace with your actual Seneca ID
+    seneca_id: "rohit7"
 
   tasks:
     - name: Ensure EPEL repository is installed
@@ -21,28 +21,37 @@
         name: tree
         state: absent
 
-    - name: Set hostname
+    - name: Set hostname to rohit7
       hostname:
-        name: "{{ seneca_id }}"
+        name: "rohit7"
 
     - name: Create new user with sudo access
       user:
         name: "{{ seneca_id }}"
         shell: /bin/bash
+        append: yes
         home: "/home/{{ seneca_id }}"
         create_home: yes
 
-    - name: Add user to sudoers
+    - name: Add user to sudoers file
       copy:
         dest: "/etc/sudoers.d/{{ seneca_id }}"
         content: "{{ seneca_id }} ALL=(ALL) NOPASSWD: ALL"
         mode: 0440
 
+    - name: Create .ssh directory for rohit7
+      file:
+        path: "/home/rohit7/.ssh"
+        state: directory
+        owner: rohit7
+        group: rohit7
+        mode: '0700'
+
     - name: Configure SSH key authentication
       authorized_key:
         user: "{{ seneca_id }}"
         state: present
-        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"  # Ensure you have an SSH key available
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}" 
 
     - name: Create directory structure for labs
       file:
