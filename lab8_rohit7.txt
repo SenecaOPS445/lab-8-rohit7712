@@ -1,10 +1,41 @@
-/home/rohit7/ops445
-├── lab1
-├── lab2
-├── lab3
-├── lab4
-├── lab5
-├── lab6
-├── lab7
-└── lab8
+PLAY [Configure CentOS 7 VM for OPS445 Labs] ****************************************************************
 
+TASK [Gathering Facts] **************************************************************************************
+ok: [vmlab]
+
+TASK [Ensure EPEL repository is installed] ******************************************************************
+ok: [vmlab]
+
+TASK [Update Apache (httpd)] ********************************************************************************
+ok: [vmlab]
+
+TASK [Remove 'tree' package] ********************************************************************************
+changed: [vmlab]
+
+TASK [Set hostname to rohit7] *******************************************************************************
+ok: [vmlab]
+
+TASK [Create new user with sudo access] *********************************************************************
+ok: [vmlab]
+
+TASK [Add user to sudoers file] *****************************************************************************
+ok: [vmlab]
+
+TASK [Create .ssh directory for rohit7] *********************************************************************
+ok: [vmlab]
+
+TASK [Configure SSH key authentication] *********************************************************************
+ok: [vmlab]
+
+TASK [Create directory structure for labs] ******************************************************************
+ok: [vmlab] => (item=1)
+ok: [vmlab] => (item=2)
+ok: [vmlab] => (item=3)
+ok: [vmlab] => (item=4)
+ok: [vmlab] => (item=5)
+ok: [vmlab] => (item=6)
+ok: [vmlab] => (item=7)
+ok: [vmlab] => (item=8)
+
+PLAY RECAP **************************************************************************************************
+vmlab                      : ok=10    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
